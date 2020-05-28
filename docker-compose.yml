@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  nginx:
+    build:
+      context: ./nginx
+#    ports:
+#      - 80:80
+    restart: always
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: Host:js.f5demo.app
+      traefik.docker.network: traefik
+    networks:
+      - traefik
+      - juiceshop
+    links: 
+      - juiceshop
+
+  juiceshop:
+    image: bkimminich/juice-shop:latest
+    restart: always
+    networks: 
+      - juiceshop
+
+networks:
+    traefik:
+        external:
+            name: traefik
+    juiceshop:
+          name: juiceshop
